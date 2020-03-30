@@ -151,7 +151,7 @@ glimpse(part_fem)
 summary(part_fem)
 
 # Una forma de solucionarlo
-part_fem$`2019 [YR2019]` <- as.numeric(part_fem$`2019 [YR2019]`)
+part_fem$`2010 [YR2010]` <- as.numeric(part_fem$`2010 [YR2010]`)
 glimpse(part_fem)
 
 head(part_fem)
