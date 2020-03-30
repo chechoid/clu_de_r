@@ -1,37 +1,7 @@
-## Welcome to GitHub Pages
+# Clú de R
 
-You can use the [editor on GitHub](https://github.com/chechoid/clu_de_r/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+El **Clú de R** es un proyecto de aprendizaje colaborativo para programar en R, en donde nos reunimos un grupo de gente con poca experiencia en programación para repasar libros y enfrentar dificultades juntos.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+Para la primera sesión usamos ejercicios tomados del libro **Ciencia de datos para gente sociable** que escribió <Antonio Vazquez Brust>[Antonio Vazquez Brust](https://www.linkedin.com/in/avazquez/?originalSubdomain=ar) y que se puede leer gratis en la <web del libro>[web del libro](https://bitsandbricks.github.io/ciencia_de_datos_gente_sociable/) y encontrar en su <blog personal>[blog personal](https://bitsandbricks.github.io/).
 
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/chechoid/clu_de_r/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+Elegimos este libro primero porque está en español, y segundo porque para introducir el lenguaje R comienza con un ejemplo muy entrenido y cercano, mucho más comprensible que los clásicos datasets *iris* o *mtcars*.kdown files.
