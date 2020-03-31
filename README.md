@@ -11,3 +11,4 @@ Para sumarte, simplemente enviá un mail a sergio@d4hr.com.
 Saludos!
 
 Sergio Garcia Mora
+También podés seguirnos en el grupo de Facebook Freakys de RRHH
