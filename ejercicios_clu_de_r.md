@@ -1,16 +1,13 @@
 Ejercicios del Clú de R
 ================
 Sergio García Mora
-1/4/2020
+
 
 # Ejercicios Capítulo 2
 
-Descargué datos de la página del Banco Mundial de este link
-[link](https://databank.bancomundial.org/source/gender-statistics/preview/on#)
-en formato csv.
+Descargué datos de la página del Banco Mundial de este link [link](https://databank.bancomundial.org/source/gender-statistics/preview/on#) en formato csv. Los datos indican el ratio de participación femenina en la fuerza laboral de cada país.
 
-Luego uso un paquete para leer archivos (también podría usarlo para leer
-archivos Excel)
+Luego uso un paquete para leer archivos (también podría usarlo para leer archivos de Excel)
 
 ``` r
 library(readr)
