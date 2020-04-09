@@ -95,25 +95,23 @@ conosur %>%
         axis.title = element_blank(),
         axis.line = element_line(colour = "grey"))
 
+#Asigno las configuración del gráfico a un objeto
+estilo <- theme(panel.background = element_blank(),
+                panel.grid.major.y = element_line(colour = "#F4F6F6"),
+                axis.title = element_blank(),
+                axis.line = element_line(colour = "grey"))
+
 # Para analizar la evolución por país en los últimos 5 años.
 conosur %>%
   group_by(Country) %>%
   ggplot(aes(x= factor(Year), y= `Female Ratio`, group=Country, color = Country))+
   geom_line(size = 1) +
-  theme(panel.background = element_blank(),
-        panel.grid.major.y = element_line(colour = "#F4F6F6"),
-        axis.title = element_blank(),
-        axis.line = element_line(colour = "grey"))
+  estilo
 
 # Hagamos un gráfico separado por país
 conosur %>%
   group_by(Country) %>%
   ggplot(aes(x= factor(Year), y= `Female Ratio`, group=Country, color = Country))+
   geom_line(size = 1) +
-  theme(panel.background = element_blank(),
-        panel.grid.major.y = element_line(colour = "#F4F6F6"),
-        axis.title = element_blank(),
-        axis.line = element_line(colour = "grey"),
-        axis.text.x = element_text(angle=90)) +
+  estilo + theme(axis.text.x = element_text(angle=90)) +
   facet_wrap(~Country)
-
