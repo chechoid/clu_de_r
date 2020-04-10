@@ -300,11 +300,12 @@ tener de referencia.
 Primero, hagamos un gráfico de barras:
 
 ``` r
-conosur %>%
+graf_1 <- conosur %>%
   group_by(Country) %>%
   summarise(Avg_Ratio = mean(`Female Ratio`)) %>%
   ggplot(aes(x = Country, y = Avg_Ratio))+
   geom_col()
+plot(graf_1)
 ```
 
 ![](ejercicios_clu_de_r_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
