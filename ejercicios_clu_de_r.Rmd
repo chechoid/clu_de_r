@@ -1,0 +1,174 @@
+---
+title: "Ejercicios del Clú de R"
+author: "Sergio García Mora"
+output: github_document
+
+---
+
+
+# Ejercicios Capítulo 2
+
+Descargué datos de la página del Banco Mundial de este link [link](https://databank.bancomundial.org/source/gender-statistics/preview/on#) en formato csv. Los datos indican el ratio de participación femenina en la fuerza laboral de cada país.
+
+Luego uso un paquete para leer archivos (también podría usarlo para leer archivos Excel)
+```{r echo = TRUE, message=FALSE}
+library(readr)
+library(tidyverse)
+```
+
+Para levantar un archivo hay dos opciones:
+
+* Especificar toda la ubicación
+```{r echo = TRUE, message=FALSE}
+participacion <- read_csv("C:/Users/Usuario/Documents/R/Clu_de_R/Ratio_Participacion_Laboral_Femenina.csv")
+```
+
+* Pero si el archivo lo guardamos en la carpeta del proyecto solo ponemos el nombre del archivo
+```{r echo = TRUE, message=FALSE}
+part_fem <- read_csv("Ratio_Participacion_Laboral_Femenina.csv")
+```
+
+El ejercicio nos pide relevar algunos datos del dataset
+```{r echo = TRUE}
+dim(part_fem)
+names(part_fem)
+glimpse(part_fem)
+```
+Cuando ejecutamos glimpse vemos que datos numéricos aparecen como *chr*, ¿qué pasa si ejecutamos la función summary?
+
+```{r echo = TRUE}
+summary(part_fem)
+```
+
+Una forma posible de solucionarlo, y cuando vemos los 6 primeros registros vemos que la columna que hace referencia al año 2010 aparece como una columna numérica.
+```{r echo = TRUE}
+part_fem$`2010 [YR2010]` <- as.numeric(part_fem$`2010 [YR2010]`)
+glimpse(part_fem)
+
+head(part_fem)
+```
+
+# Ejercicios Capítulo 3 del libro "Ciencia de Datos para gente sociable"
+## Seleccionando y transformando datos
+
+Cargo de nuevo los datos
+```{r echo=TRUE, message=FALSE}
+library(readr)
+library(tidyverse)
+part_fem <- read_csv("Ratio_Participacion_Laboral_Femenina.csv")
+```
+
+Como tenemos datos que son texto y otros numéricos, separamos las columnas numéricas de las columnas que contienen texto para transformarlos
+```{r echo=TRUE}
+cols_char <- part_fem %>% select(3:4) %>%
+  mutate_if(is.character, as.factor)
+cols_char
+```
+
+Antes vimos que podíamos cambiar el tipo de variable columna por columna, lo cual no es eficiente. [Pablo de Innocentis](https://www.linkedin.com/in/padeinnocentiis/) aportó esta solución.
+
+Usando la función mutate_if() cambia todo lo que sea character (chr) a numerico
+```{r echo=TRUE}
+part_fem2 <- part_fem %>% select(5:14) %>%
+  mutate_if(is.character, as.numeric) %>% 
+  cbind(cols_char) %>% # Esta función une las columnas de ambos data frames
+  select('país Name', 'país Code', everything()) # Reorganiza el dataset poniendo los nombres por delante
+```
+La función *cbind* lo que hace es unir los dos data frames que creamos cuando separamos el data frame original para transformar las variables. Lo que hace es pegar las columnas de un objeto, al lado de las columnas del otro objeto. Por esta razón es importante verificar siempre que ambos datasets tengan la misma cantidad de filas.
+
+El último *select* que usamos en la función lo que hace es organizar el nuevo conjunto de datos en el orden que querramos: en este caso pone *'Pais Name'* primero, luego *'País Code'* y con la función *everything()* le decimos a R que ponga todas las columnas que faltan a continuación.
+
+Veamos cómo quedó el dataset
+```{r echo = TRUE}
+glimpse(part_fem2)
+```
+
+Elijo los países del Cono Sur y los últimos 5 años de informe
+```{r echo=TRUE}
+conosur <- part_fem2 %>%
+  select(`país Name`, `2015 [YR2015]`:`2019 [YR2019]`) %>%
+  rename("Country" = `país Name`,
+         "2015"=`2015 [YR2015]`,
+         "2016"=`2016 [YR2016]`,
+         "2017"=`2017 [YR2017]`,
+         "2018"=`2018 [YR2018]`, 
+         "2019"=`2019 [YR2019]`) %>%
+  filter(Country %in% c("Argentina","Chile", "Brazil", "Uruguay", "Paraguay", 'Peru')) %>%
+  pivot_longer(-Country, names_to = 'Year', values_to = "Female Ratio")
+```
+
+Veamos nuestro nuevo conjunto de datos
+```{r echo=TRUE}
+conosur
+```
+
+# Ejercicios Capítulo 4 libro Ciencia de Datos para Gente Sociable
+## Visualización
+Hago un gráfico de barras para comparar la participación femenina en la fuerza de trabajo por país.
+Este link es muy útil (http://www.cookbook-r.com/Graphs/Bar_and_line_graphs_(ggplot2)/) para tener de referencia.
+
+Primero, hagamos un gráfico de barras:
+```{r echo=TRUE, results='asis'}
+conosur %>%
+  group_by(Country) %>%
+  summarise(Avg_Ratio = mean(`Female Ratio`)) %>%
+  ggplot(aes(x = Country, y = Avg_Ratio))+
+  geom_col()
+```
+
+Ordenemos el gráfico con los países con mayor ratio hasta los de menor ratio y rotemos los ejes para hacerlo más legible.
+```{r echo=TRUE}
+conosur %>%
+  group_by(Country) %>%
+  summarise(Avg_Ratio = mean(`Female Ratio`)) %>%
+  ggplot(aes(x = reorder(Country, Avg_Ratio), y = Avg_Ratio))+
+  geom_col() +
+  coord_flip() 
+```
+
+Esta es la versión "base" de ggplot2. Una de las ventajas que tiene este paquete es que es posible customizar todo lo que queramos.
+```{r echo=TRUE}
+conosur %>%
+  group_by(Country) %>%
+  summarise(Avg_Ratio = mean(`Female Ratio`)) %>%
+  ggplot(aes(x = reorder(Country, Avg_Ratio), y = Avg_Ratio))+
+  geom_col(fill="#5499C7") +
+  coord_flip() +
+  theme(panel.background = element_blank(),
+        panel.grid.major.y = element_line(colour = "#F4F6F6"),
+        axis.title = element_blank(),
+        axis.line = element_line(colour = "grey"))
+```
+
+**R** es un lenguaje por objetos. Por ejemplo, para cambiar el estilo del gráfico tuvimos que escribir 4 líneas de código. Si tenemos que escribir (o copiar o pegar) estas líneas cada vez que hacemos un gráfico se vuelve tedioso y hace más difícil hacer el trabajo.
+
+Imaginemos que presentamos un informe y la persona que lo recibe nos pide que cambiemos el color. Si tenemos que revisar cada código de cada gráfico nos llevaría mucho tiempo y salud mental. Por eso es una buena práctica asignar los elementos del estilo a un objeto y usarlo en cada gráfico. Esto hace que el código sea más elegante, y sea mucho más sencillo corregir el estilo de ser necesario.
+
+Asignemos entonces nuestro estilo (en lenguaje de R, el tema) a un objeto.
+```{r echo=TRUE}
+estilo <- theme(panel.background = element_blank(),
+        panel.grid.major.y = element_line(colour = "#F4F6F6"),
+        axis.title = element_blank(),
+        axis.line = element_line(colour = "grey"))
+```
+
+Para analizar la evolución por país en los últimos 5 años lo mejor es usar un gráfico de líneas. Podemos utilizar nuestro objeto *estilo* para formatear el gráfico. Probemos esto, separando los gráficos por país.
+```{r echo = TRUE}
+conosur %>%
+  group_by(Country) %>%
+  ggplot(aes(x= factor(Year), y= `Female Ratio`, group=Country, color = Country))+
+  geom_line(size = 1) +
+  estilo +
+  facet_wrap(~Country)
+```
+
+Por más que tengamos un estilo definido con un objeto, podemos hacer cambios individuales con la función *theme*, por ejemplo, cambiar la orientación de las etiquetas del eje 'x'.
+```{r echo=TRUE}
+conosur %>%
+  group_by(Country) %>%
+  ggplot(aes(x= factor(Year), y= `Female Ratio`, group=Country, color = Country))+
+  geom_line(size = 1) +
+  estilo +
+  theme(axis.text.x = element_text(angle=90))+
+  facet_wrap(~Country, ncol=2)
+```
